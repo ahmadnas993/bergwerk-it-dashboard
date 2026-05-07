@@ -1,0 +1,25 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - Modules
+        - routes
+        - tests
+
+    level: 6
+
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache
+        - public
+        - Modules/*/database/migrations
+
+    ignoreErrors:
+        # nwidart modules keep their config under Modules/*/config/, which Larastan does not
+        # recognize as a "config directory" — env() calls there are correct.
+        -
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: Modules/*/config/*.php

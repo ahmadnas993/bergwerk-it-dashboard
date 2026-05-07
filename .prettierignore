@@ -1,0 +1,10 @@
+public/build/
+node_modules/
+vendor/
+storage/
+bootstrap/cache/
+resources/js/types/generated/
+*.min.js
+*.min.css
+pnpm-lock.yaml
+composer.lock

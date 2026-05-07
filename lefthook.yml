@@ -1,0 +1,23 @@
+# Lefthook pre-commit hooks. Run on staged files only — fast, scoped, fail-fast.
+# Phpstan analyses the full configured paths (per-file would miss type relationships)
+# but only triggers when at least one PHP file is staged.
+
+pre-commit:
+    parallel: true
+    commands:
+        pint:
+            tags: php
+            glob: '*.php'
+            run: ./vendor/bin/pint --test {staged_files}
+        phpstan:
+            tags: php
+            glob: '*.php'
+            run: ./vendor/bin/phpstan analyse --no-progress --memory-limit=1G
+        eslint:
+            tags: js
+            glob: '*.{ts,tsx}'
+            run: pnpm exec eslint {staged_files}
+        prettier:
+            tags: js
+            glob: '*.{ts,tsx,css}'
+            run: pnpm exec prettier --check {staged_files}
