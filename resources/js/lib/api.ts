@@ -5,14 +5,10 @@ function getCookie(name: string): string | undefined {
     return match ? decodeURIComponent(match[2]) : undefined;
 }
 
-let csrfPrimed = false;
-
 async function primeCsrf(): Promise<void> {
-    if (csrfPrimed) return;
     await fetch('/sanctum/csrf-cookie', {
         credentials: 'same-origin',
     });
-    csrfPrimed = true;
 }
 
 export class ApiError extends Error {
@@ -55,7 +51,14 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     });
 
     const text = await response.text();
-    const data: unknown = text ? JSON.parse(text) : null;
+    let data: unknown = null;
+    if (text) {
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = text;
+        }
+    }
 
     if (!response.ok) {
         throw new ApiError(
